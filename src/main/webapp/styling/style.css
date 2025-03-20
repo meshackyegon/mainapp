@@ -1,0 +1,65 @@
+* {
+  font-family: calibri;
+  color: white;
+}
+body {
+  border: 2px solid white;
+  display: flex;
+  margin-top: 20px;
+  align-items: center;
+  flex-direction: column;
+  height: fit-content;
+  text-align: center;
+  background-color: black;
+}
+table td {
+  border: 2px solid white;
+}
+
+table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  margin: 0 auto;
+}
+table tr:nth-child(even) td {
+  background-color: lightblue;
+  color: black;
+}
+tbody tr:hover td {
+  background-color: #ddd;
+  color: black;
+}
+input {
+  color: black;
+}
+div {
+  text-align: center;
+  border: 2px solid green;
+  min-width: 90vw;
+  box-shadow: 5px 5px 10px greenyellow;
+}
+p {
+  word-wrap: break-word;
+}
+.table {
+  all: initial;
+  overflow-x: auto;
+}
+div.buttons{
+  border: none;
+  box-shadow: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+div.buttons form{
+  margin:10px
+}
+h3, h3 ul li{
+  color: orangered;
+  text-align: left;
+  font-size: initial;
+}
+table thead{
+  font-size: large;
+}
