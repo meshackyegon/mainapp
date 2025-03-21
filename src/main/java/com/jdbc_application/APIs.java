@@ -1,6 +1,5 @@
 package com.jdbc_application;
 
-import com.abhiram.model.Contact;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.sql.*;
@@ -8,6 +7,8 @@ import java.util.*;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.ext.Provider;
+
+import com.mesh.model.Contact;
 
 @Provider
 @Path("/contacts")

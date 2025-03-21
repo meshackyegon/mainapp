@@ -22,7 +22,7 @@
                                 <% // this makes the previous page out of the cached pages.
                                     response.setHeader("Cache-control","no-cache, no-store, must-revalidate");
                                     Class.forName("com.mysql.cj.jdbc.Driver"); Connection
-                                    con=DriverManager.getConnection("jdbc:mysql://localhost:3306/servlet_application","root",password);
+                                    con=DriverManager.getConnection("jdbc:mysql://localhost:3306/servlet_application","root",this.password);
                                     Statement stmt=con.createStatement(); ResultSet rs=stmt.executeQuery("SELECT * FROM
                                     store_user ORDER BY date_register;"); %>
 
@@ -64,7 +64,8 @@
                                     </div>
 
                                     <!-- Bootstrap 4 JS (Optional) -->
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script
-            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                                    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+                                    <script
+                                        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+                                    <script
+                                        src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

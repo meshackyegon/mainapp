@@ -1,4 +1,4 @@
-package com.abhiram;
+package com.mesh;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,9 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class admin extends HttpServlet {
-    
     private static final long serialVersionUID = 2595124483992980425L;
-
     public void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
         /* Usage of some methods in HttpServletResponse and ServletResponse interfaces */
         response.setContentType("text/html;charset=UTF-8");
@@ -38,7 +36,7 @@ public class admin extends HttpServlet {
             out.println("<p>Remote Address <b>" + request.getRemoteAddr() + "</b></p>");
             out.println("<p>Authentication type <b>" + request.getAuthType()+ "</b></p></div>");
             String user=request.getParameter("user");
-            out.println("<h2> Welcome Admin "+user+"</h2>");
+            out.println("<h2> Welcome Admin"+user+"</h2>");
         }
         catch(Exception e){
             System.out.println(e);
