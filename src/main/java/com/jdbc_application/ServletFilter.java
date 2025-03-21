@@ -33,7 +33,6 @@ public class ServletFilter implements Filter{
         }
     }
     public void processFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-
         request=(HttpServletRequest)request;
         response=(HttpServletResponse)response;
         PrintWriter out=response.getWriter();
