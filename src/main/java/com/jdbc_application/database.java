@@ -104,6 +104,7 @@ public class database {
     stmt2.setString(7, maskedname);
     stmt2.setString(8, maskedphone);
     stmt2.setString(9, hashedphone);
+    // stmt2.setDate(3, Date.valueOf(date_of_birth));
     
     // Set the current timestamp for the `date_register` field
     java.sql.Timestamp timestamp = getCurrentJavaSqlTimestamp();
