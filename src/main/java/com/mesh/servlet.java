@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 @WebServlet("/contact-api")
@@ -18,14 +19,14 @@ public class servlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private final String dbUser = "root";
     private final String dbPassword = "";
-    private final String dbURL = "jdbc:mysql://localhost:3306/servlet_application"; // Corrected URL
-    private Connection con; // Declare Connection
+    private final String dbURL = "jdbc:mysql://localhost:3306/servlet";
+    private Connection con;
 
     @Override
     public void init() throws ServletException {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver"); // Load Driver
-            con = DriverManager.getConnection(dbURL, dbUser, dbPassword); // Establish Connection
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection(dbURL, dbUser, dbPassword);
         } catch (Exception e) {
             throw new ServletException("Database connection failed", e);
         }
@@ -44,72 +45,118 @@ public class servlet extends HttpServlet {
             sb.append(line);
         }
 
-        // Convert the received JSON string to a JSONObject
-        JSONObject receivedJson = new JSONObject(sb.toString());
+        try {
+            JSONObject receivedJson = new JSONObject(sb.toString());
+            String username = receivedJson.getString("username");
+            String password = receivedJson.getString("password");
+            String dob = receivedJson.getString("date_of_birth");
+            String email = receivedJson.getString("email");
+            String address = receivedJson.getString("address");
+            String phone = receivedJson.getString("phonenumber");
 
-        JSONObject responseJson = new JSONObject();
-        responseJson.put("received_data", receivedJson); // Send back received data
-        out.print(receivedJson.toString());
+            String maskedName = maskName(username);
+            String maskedPhone = maskPhoneNumber(phone);
+            String hashedPhone = hashPhoneNumber(phone);
 
-//        // Send JSON response
-//        out.print(responseJson.toString());
-//        out.flush();
-//             JSONObject json = new JSONObject();
-//            json.put("status", "success");
-//            json.put("message", "Contact saved successfully.");
-//            out.print(json.toString());
-       } 
-    
-//        try {
-//            String username = request.getParameter("username");
-//            String password = request.getParameter("password");
-//            String dob = request.getParameter("date_of_birth");
-//            String email = request.getParameter("email");
-//            String address = request.getParameter("address");
-//            String phone = request.getParameter("phonenumber");
-//
-//            String maskedName = maskName(username);
-//            String maskedPhone = maskPhoneNumber(phone);
-//            String hashedPhone = hashPhoneNumber(phone);
-//
-//            insertContact(username, password, dob, email, address, phone, maskedName, maskedPhone, hashedPhone);
-//
-//            JSONObject json = new JSONObject();
-//            json.put("status", "success");
-//            json.put("message", "Contact saved successfully.");
-//            out.print(json.toString());
-//        } catch (Exception e) {
-//            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-//            sendErrorResponse(out, "Database error: " + e.getMessage());
-//        } finally {
-//            out.close();
-//        }
-//    }
+            insertContact(username, password, dob, email, address, phone, maskedName, maskedPhone, hashedPhone);
 
-    private void sendErrorResponse(PrintWriter out, String message) {
-        JSONObject json = new JSONObject();
-        json.put("status", "error");
-        json.put("message", message);
-        out.print(json.toString());
+            JSONObject json = new JSONObject();
+            json.put("status", "success");
+            json.put("message", "Contact saved successfully.");
+            out.print(json.toString());
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            sendErrorResponse(out, "Database error: " + e.getMessage());
+        } finally {
+            out.close();
+        }
     }
+
+    // READ (Fetch all contacts)
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
-             JSONObject json = new JSONObject();
+
+        try {
+            JSONArray contacts = fetchAllContacts();
+            JSONObject json = new JSONObject();
             json.put("status", "success");
-            json.put("message", "data retrieved successfully via API.");
+            json.put("data", contacts);
             out.print(json.toString());
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            sendErrorResponse(out, "Database error: " + e.getMessage());
+        } finally {
+            out.close();
+        }
     }
 
-    // Helper method to insert contact
+    // UPDATE (Update a contact)
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        StringBuilder sb = new StringBuilder();
+        BufferedReader reader = request.getReader();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line);
+        }
+
+        try {
+            JSONObject receivedJson = new JSONObject(sb.toString());
+            int id = receivedJson.getInt("id");
+            String username = receivedJson.getString("username");
+            String email = receivedJson.getString("email");
+
+            updateContact(id, username, email);
+
+            JSONObject json = new JSONObject();
+            json.put("status", "success");
+            json.put("message", "Contact updated successfully.");
+            out.print(json.toString());
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            sendErrorResponse(out, "Database error: " + e.getMessage());
+        } finally {
+            out.close();
+        }
+    }
+
+    // DELETE (Delete a contact)
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        String idParam = request.getParameter("id");
+
+        try {
+            int id = Integer.parseInt(idParam);
+            deleteContact(id);
+
+            JSONObject json = new JSONObject();
+            json.put("status", "success");
+            json.put("message", "Contact deleted successfully.");
+            out.print(json.toString());
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            sendErrorResponse(out, "Database error: " + e.getMessage());
+        } finally {
+            out.close();
+        }
+    }
+
     private void insertContact(String username, String password, String dob, String email, 
           String address, String phone, String maskedName, String maskedPhone, String hashedPhone)
           throws SQLException {
         String sql = "INSERT INTO contact (Username, Password, date_of_birth, email, phone_number, address, maskedname, maskedphone, hashedphone) "
                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, username);
             stmt.setString(2, password);
             stmt.setDate(3, Date.valueOf(dob));
@@ -120,18 +167,64 @@ public class servlet extends HttpServlet {
             stmt.setString(8, maskedPhone);
             stmt.setString(9, hashedPhone);
 
-            int affectedRows = stmt.executeUpdate();
-            if (affectedRows != 1) {
-                throw new SQLException("Failed to insert contact.");
+            stmt.executeUpdate();
+        }
+    }
+
+    private JSONArray fetchAllContacts() throws SQLException {
+        String sql = "SELECT * FROM contact";
+        JSONArray contacts = new JSONArray();
+
+        try (Statement stmt = con.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                JSONObject contact = new JSONObject();
+                contact.put("id", rs.getInt("id"));
+                contact.put("username", rs.getString("Username"));
+                contact.put("email", rs.getString("email"));
+                contact.put("phone_number", rs.getString("phone_number"));
+                contact.put("address", rs.getString("address"));
+                contacts.put(contact);
             }
         }
+
+        return contacts;
+    }
+
+    private void updateContact(int id, String username, String email) throws SQLException {
+        String sql = "UPDATE contact SET Username = ?, email = ? WHERE id = ?";
+
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            stmt.setString(2, email);
+            stmt.setInt(3, id);
+
+            stmt.executeUpdate();
+        }
+    }
+
+    private void deleteContact(int id) throws SQLException {
+        String sql = "DELETE FROM contact WHERE id = ?";
+
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+
+            stmt.executeUpdate();
+        }
+    }
+
+    private void sendErrorResponse(PrintWriter out, String message) {
+        JSONObject json = new JSONObject();
+        json.put("status", "error");
+        json.put("message", message);
+        out.print(json.toString());
     }
 
     @Override
     public void destroy() {
         try {
             if (con != null && !con.isClosed()) {
-                con.close(); // Close connection when the servlet is destroyed
+                con.close();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -139,7 +232,7 @@ public class servlet extends HttpServlet {
     }
 
     private String maskName(String name) {
-        return name.substring(0, 1) + "****"; // Simple masking
+        return name.substring(0, 1) + "****";
     }
 
     private String maskPhoneNumber(String phone) {

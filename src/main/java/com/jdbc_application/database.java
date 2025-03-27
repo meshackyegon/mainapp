@@ -69,13 +69,14 @@ public class database {
     Class.forName("com.mysql.cj.jdbc.Driver");
     Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/", "root", this.password);
     Statement stmt1 = con.createStatement();
-    stmt1.executeUpdate("CREATE DATABASE IF NOT EXISTS servlet_application ;");
-    stmt1.executeUpdate("USE servlet_application;");
+    stmt1.executeUpdate("CREATE DATABASE IF NOT EXISTS servlet ;");
+    stmt1.executeUpdate("USE servlet;");
     stmt1.executeQuery("SELECT DATABASE();");
     
     // Create table with new columns
     String query1 = ("CREATE TABLE IF NOT EXISTS contact(" + 
-                     "Username VARCHAR(30) NOT NULL PRIMARY KEY," +
+                     "id INT AUTO_INCREMENT PRIMARY KEY," +
+                     "Username VARCHAR(30) NOT NULL UNIQUE," +
                      "Password VARCHAR(30) NOT NULL," +
                      "date_of_birth date NOT NULL," + 
                      "email varchar(100) NOT NULL," +
@@ -126,7 +127,7 @@ public class database {
             throws ClassNotFoundException, SQLException, IOException {
         Class.forName("com.mysql.cj.jdbc.Driver");
         Connection con = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/servlet_application", "root", this.password);
+                "jdbc:mysql://localhost:3306/servlet", "root", this.password);
         
         Statement stmt = con.createStatement();
         ResultSet rs1 = stmt.executeQuery(
@@ -153,7 +154,7 @@ public class database {
     public void login(String username, String password, HttpServletRequest request, HttpServletResponse response)
             throws ClassNotFoundException, SQLException, IOException, ServletException {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/servlet_application", "root",
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/servlet", "root",
                 this.password);
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT * FROM contact WHERE Username=" + "'" + username + "';");
@@ -185,7 +186,7 @@ public class database {
 
     public void delete_row(String username) throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/servlet_application", "root",
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/servlet", "root",
                 this.password);
         Statement stmt = con.createStatement();
 
@@ -201,7 +202,7 @@ public class database {
     public void update_row(String username, String oldPassword, String newPassword)
             throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/servlet_application", "root",
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/servlet", "root",
                 this.password);
         Statement stmt = con.createStatement();
 
