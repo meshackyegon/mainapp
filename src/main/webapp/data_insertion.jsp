@@ -74,11 +74,16 @@
                 <label for="phone_number">Phone Number: </label>
                 <input type="tel" class="form-control" name="phone_number" id="phone_number" pattern="[0-9]{10}" placeholder="1234567890" required>
             </div>
+            <div class="form-group">
+                <label for="phone_number">organization: </label>
+                <input type="text" class="form-control" name="organization" id="organizaton"  placeholder="zurion" required>
+            </div>
 
             <div class="form-group">
                 <label for="address">Address: </label>
                 <textarea class="form-control" name="address" id="address" rows="4" placeholder="Enter your address here" required></textarea>
             </div>
+            
 
             <div class="form-group text-center">
                 <input type="submit" class="btn btn-success" value="Register" name="button">

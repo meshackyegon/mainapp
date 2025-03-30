@@ -53,12 +53,13 @@ public class servlet extends HttpServlet {
             String email = receivedJson.getString("email");
             String address = receivedJson.getString("address");
             String phone = receivedJson.getString("phonenumber");
+            String organization = receivedJson.getString("organization");
 
             String maskedName = maskName(username);
             String maskedPhone = maskPhoneNumber(phone);
             String hashedPhone = hashPhoneNumber(phone);
 
-            insertContact(username, password, dob, email, address, phone, maskedName, maskedPhone, hashedPhone);
+            insertContact(username, password, dob, email, address, phone, maskedName, maskedPhone, organization, hashedPhone);
 
             JSONObject json = new JSONObject();
             json.put("status", "success");
@@ -111,6 +112,7 @@ public class servlet extends HttpServlet {
             int id = receivedJson.getInt("id");
             String username = receivedJson.getString("username");
             String email = receivedJson.getString("email");
+            
 
             updateContact(id, username, email);
 
@@ -151,9 +153,9 @@ public class servlet extends HttpServlet {
     }
 
     private void insertContact(String username, String password, String dob, String email, 
-          String address, String phone, String maskedName, String maskedPhone, String hashedPhone)
+          String address, String phone, String maskedName, String maskedPhone, String hashedPhone, String organization)
           throws SQLException {
-        String sql = "INSERT INTO contact (Username, Password, date_of_birth, email, phone_number, address, maskedname, maskedphone, hashedphone) "
+        String sql = "INSERT INTO contact (Username, Password, date_of_birth, email, phone_number, address, maskedname, maskedphone, organization,hashedphone) "
                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
@@ -165,7 +167,8 @@ public class servlet extends HttpServlet {
             stmt.setString(6, address);
             stmt.setString(7, maskedName);
             stmt.setString(8, maskedPhone);
-            stmt.setString(9, hashedPhone);
+            stmt.setString(9, organization);
+            stmt.setString(10, hashedPhone);
 
             stmt.executeUpdate();
         }

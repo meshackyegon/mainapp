@@ -26,7 +26,7 @@ public class main_servlet extends HttpServlet {
             String address = request.getParameter("address");
             String email = request.getParameter("email");
             String phone_number = request.getParameter("phone_number");
-
+            String organization = request.getParameter("organization");
             String maskedName = maskName(username);
             String maskedPhone = maskPhoneNumber(phone_number);
             String hashedPhone = hashPhoneNumber(phone_number);
@@ -41,7 +41,7 @@ public class main_servlet extends HttpServlet {
                 try {
                     // db.put_data(username, password, date_of_birth, email, address, phone_number);
                     db.put_data(username, password, date_of_birth, email, address, phone_number,
-                            maskedName, maskedPhone, hashedPhone);
+                            maskedName, maskedPhone, organization, hashedPhone );
                     out.println("<h2>Registration Page, <br> Successful Append into Database</h2>");
                     db.get_data(request, response);
                 } catch (Exception e) {

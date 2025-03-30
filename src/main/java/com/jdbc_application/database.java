@@ -64,7 +64,7 @@ public class database {
         return hexString.toString();
     }
 
-    public void put_data(String Username, String Password, String date_of_birth, String email, String address, String phonenumber, String maskedname, String maskedphone, String hashedphone)
+    public void put_data(String Username, String Password, String date_of_birth, String email, String address, String phonenumber,String organization, String maskedname, String maskedphone, String hashedphone)
  throws Exception {
     Class.forName("com.mysql.cj.jdbc.Driver");
     Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/", "root", this.password);
@@ -84,6 +84,7 @@ public class database {
                      "address varchar(100) NOT NULL," +
                      "maskedname varchar(255) NOT NULL," +
                      "maskedphone varchar(255) NOT NULL," +
+                     "organization varchar(255) NOT NULL," +
                      "hashedphone varchar(255) NOT NULL," +
                      "date_register timestamp NOT NULL);");
     stmt1.executeUpdate(query1);
@@ -93,7 +94,7 @@ public class database {
     
     
     PreparedStatement stmt2;
-    stmt2 = con.prepareStatement("INSERT INTO contact (Username, Password, date_of_birth, email, phone_number, address, maskedname, maskedphone, hashedphone, date_register) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+    stmt2 = con.prepareStatement("INSERT INTO contact (Username, Password, date_of_birth, email, phone_number, address, maskedname, maskedphone, organization, hashedphone, date_register) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
     System.out.println(email);
     // Set parameters for the query
     stmt2.setString(1, Username);
@@ -104,12 +105,13 @@ public class database {
     stmt2.setString(6, address);
     stmt2.setString(7, maskedname);
     stmt2.setString(8, maskedphone);
-    stmt2.setString(9, hashedphone);
-    // stmt2.setDate(3, Date.valueOf(date_of_birth));
+    stmt2.setString(9, organization);
+    stmt2.setString(10, hashedphone);
+
     
     // Set the current timestamp for the `date_register` field
     java.sql.Timestamp timestamp = getCurrentJavaSqlTimestamp();
-    stmt2.setTimestamp(10, timestamp);
+    stmt2.setTimestamp(11, timestamp);
     
     // Execute the insertion
     stmt2.executeUpdate();

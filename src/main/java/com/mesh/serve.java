@@ -67,7 +67,7 @@ public class serve extends HttpServlet {
     }
 
     private JSONObject searchContact(String phoneHash, String maskedName, String maskedPhone) throws SQLException {
-        String query = "SELECT * FROM contacts WHERE phone_hash = ? OR (masked_name = ? AND masked_phone = ?)";
+        String query = "SELECT * FROM contact WHERE phone_hash = ? OR (masked_name = ? AND masked_phone = ?)";
         try (PreparedStatement stmt = con.prepareStatement(query)) {
             stmt.setString(1, phoneHash);
             stmt.setString(2, maskedName);
@@ -87,7 +87,7 @@ public class serve extends HttpServlet {
     }
 
     private JSONArray listOrganizationContacts(String organizationName) throws SQLException {
-        String query = "SELECT * FROM contacts WHERE organization_name = ?";
+        String query = "SELECT * FROM contact WHERE organization = ?";
         try (PreparedStatement stmt = con.prepareStatement(query)) {
             stmt.setString(1, organizationName);
 
