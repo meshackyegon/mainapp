@@ -155,8 +155,8 @@ public class servlet extends HttpServlet {
     private void insertContact(String username, String password, String dob, String email, 
           String address, String phone, String maskedName, String maskedPhone, String hashedPhone, String organization)
           throws SQLException {
-        String sql = "INSERT INTO contact (Username, Password, date_of_birth, email, phone_number, address, maskedname, maskedphone, organization,hashedphone) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO contact (Username, Password, date_of_birth, email, phone_number, address, maskedname, maskedphone, organization, hashedphone) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?,?, ?)";
 
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setString(1, username);

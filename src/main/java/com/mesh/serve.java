@@ -77,8 +77,8 @@ public class serve extends HttpServlet {
             if (rs.next()) {
                 JSONObject contact = new JSONObject();
                 contact.put("id", rs.getInt("id"));
-                contact.put("name", rs.getString("name"));
-                contact.put("phone", rs.getString("phone"));
+                contact.put("organization", rs.getString("organization"));
+                contact.put("phone_number", rs.getString("phone_number"));
                 return contact;
             } else {
                 return new JSONObject().put("message", "Contact not found");
@@ -96,8 +96,8 @@ public class serve extends HttpServlet {
             while (rs.next()) {
                 JSONObject contact = new JSONObject();
                 contact.put("id", rs.getInt("id"));
-                contact.put("name", rs.getString("name"));
-                contact.put("phone", rs.getString("phone"));
+                contact.put("organization", rs.getString("organization"));
+                contact.put("phone_number", rs.getString("phone_number"));
                 contacts.put(contact);
             }
             return contacts;
